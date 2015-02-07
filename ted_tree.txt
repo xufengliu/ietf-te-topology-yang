@@ -1,0 +1,143 @@
+module: ted-t
+augment /nt:network-topology/nt:topology/nt:topology-types:
+   +--rw ted-t-topology!
+augment /nt:network-topology/nt:topology/nt:node:
+   +--rw te-router-id-ipv4?    inet:ipv4-address
+   +--rw te-router-id-ipv6?    inet:ipv6-address
+   +--rw ipv4-local-address* [ipv4-prefix]
+   |  +--rw ipv4-prefix    inet:ipv4-prefix
+   +--rw ipv6-local-address* [ipv6-prefix]
+   |  +--rw ipv6-prefix      inet:ipv6-prefix
+   |  +--rw prefix-option?   uint8
+   +--rw pcc-capabilities?     pcc-capabilities
+augment /nt:network-topology/nt:topology/nt:link:
+   +--rw admin-status?                       enumeration
+   +--rw oper-status?                        enumeration
+   +--rw area-id?                            binary
+   +--rw performance-metric-throttle {te-performance-metric}?
+   |  +--rw unidirectional-delay-offset?           uint32
+   |  +--rw measure-interval?                      uint32
+   |  +--rw advertisement-interval?                uint32
+   |  +--rw suppression-interval?                  uint32
+   |  +--rw threshold-out
+   |  |  +--rw unidirectional-delay?                 uint32
+   |  |  +--rw unidirectional-min-delay?             uint32
+   |  |  +--rw unidirectional-max-delay?             uint32
+   |  |  +--rw unidirectional-delay-variation?       uint32
+   |  |  +--rw unidirectional-packet-loss?           decimal64
+   |  |  +--rw unidirectional-residual-bandwidth?    decimal64
+   |  |  +--rw unidirectional-available-bandwidth?   decimal64
+   |  |  +--rw unidirectional-utilized-bandwidth?    decimal64
+   |  +--rw threshold-in
+   |  |  +--rw unidirectional-delay?                 uint32
+   |  |  +--rw unidirectional-min-delay?             uint32
+   |  |  +--rw unidirectional-max-delay?             uint32
+   |  |  +--rw unidirectional-delay-variation?       uint32
+   |  |  +--rw unidirectional-packet-loss?           decimal64
+   |  |  +--rw unidirectional-residual-bandwidth?    decimal64
+   |  |  +--rw unidirectional-available-bandwidth?   decimal64
+   |  |  +--rw unidirectional-utilized-bandwidth?    decimal64
+   |  +--rw threshold-accelerated-advertisement
+   |     +--rw unidirectional-delay?                 uint32
+   |     +--rw unidirectional-min-delay?             uint32
+   |     +--rw unidirectional-max-delay?             uint32
+   |     +--rw unidirectional-delay-variation?       uint32
+   |     +--rw unidirectional-packet-loss?           decimal64
+   |     +--rw unidirectional-residual-bandwidth?    decimal64
+   |     +--rw unidirectional-available-bandwidth?   decimal64
+   |     +--rw unidirectional-utilized-bandwidth?    decimal64
+   +--rw information-source?                 enumeration
+   +--rw credibility-preference?             uint16
+   +--rw link-index?                         uint64
+   +--rw administrative-group* [sequence]
+   |  +--rw sequence      uint32
+   |  +--rw ag-element?   uint32
+   +--rw max-link-bandwidth?                 decimal64
+   +--rw max-resv-link-bandwidth?            decimal64
+   +--rw unreserved-bandwidth* [priority]
+   |  +--rw priority     uint8
+   |  +--rw bandwidth?   decimal64
+   +--rw te-default-metric?                  uint32
+   +--rw performance-metric {te-performance-metric}?
+   |  +--rw measurement
+   |  |  +--rw unidirectional-delay?                 uint32
+   |  |  +--rw unidirectional-min-delay?             uint32
+   |  |  +--rw unidirectional-max-delay?             uint32
+   |  |  +--rw unidirectional-delay-variation?       uint32
+   |  |  +--rw unidirectional-packet-loss?           decimal64
+   |  |  +--rw unidirectional-residual-bandwidth?    decimal64
+   |  |  +--rw unidirectional-available-bandwidth?   decimal64
+   |  |  +--rw unidirectional-utilized-bandwidth?    decimal64
+   |  +--rw normality
+   |     +--rw unidirectional-delay?                 performance-metric-normality
+   |     +--rw unidirectional-min-delay?             performance-metric-normality
+   |     +--rw unidirectional-max-delay?             performance-metric-normality
+   |     +--rw unidirectional-delay-variation?       performance-metric-normality
+   |     +--rw unidirectional-packet-loss?           performance-metric-normality
+   |     +--rw unidirectional-residual-bandwidth?    performance-metric-normality
+   |     +--rw unidirectional-available-bandwidth?   performance-metric-normality
+   |     +--rw unidirectional-utilized-bandwidth?    performance-metric-normality
+   +--rw link-protection-type?               enumeration
+   +--rw interface-switching-capabilities* [switching-capability]
+   |  +--rw switching-capability               ted:switching-capabilities
+   |  +--rw encoding?                          ted:encoding-type
+   |  +--rw max-lsp-bandwidth* [priority]
+   |  |  +--rw priority     uint8
+   |  |  +--rw bandwidth?   decimal64
+   |  +--rw packet-switch-capable
+   |  |  +--rw minimum-lsp-bandwidth?   decimal64
+   |  |  +--rw interface-mtu?           uint16
+   |  +--rw time-division-multiplex-capable
+   |     +--rw minimum-lsp-bandwidth?   decimal64
+   |     +--rw indication?              enumeration
+   +--rw srlg
+   |  +--rw srlg-values* [srlg-value]
+   |     +--rw srlg-value    uint32
+   +--rw alt-information-sources* [information-source]
+      +--rw information-source                  enumeration
+      +--rw credibility-preference?             uint16
+      +--rw link-index?                         uint64
+      +--rw administrative-group* [sequence]
+      |  +--rw sequence      uint32
+      |  +--rw ag-element?   uint32
+      +--rw max-link-bandwidth?                 decimal64
+      +--rw max-resv-link-bandwidth?            decimal64
+      +--rw unreserved-bandwidth* [priority]
+      |  +--rw priority     uint8
+      |  +--rw bandwidth?   decimal64
+      +--rw te-default-metric?                  uint32
+      +--rw performance-metric {te-performance-metric}?
+      |  +--rw measurement
+      |  |  +--rw unidirectional-delay?                 uint32
+      |  |  +--rw unidirectional-min-delay?             uint32
+      |  |  +--rw unidirectional-max-delay?             uint32
+      |  |  +--rw unidirectional-delay-variation?       uint32
+      |  |  +--rw unidirectional-packet-loss?           decimal64
+      |  |  +--rw unidirectional-residual-bandwidth?    decimal64
+      |  |  +--rw unidirectional-available-bandwidth?   decimal64
+      |  |  +--rw unidirectional-utilized-bandwidth?    decimal64
+      |  +--rw normality
+      |     +--rw unidirectional-delay?                 performance-metric-normality
+      |     +--rw unidirectional-min-delay?             performance-metric-normality
+      |     +--rw unidirectional-max-delay?             performance-metric-normality
+      |     +--rw unidirectional-delay-variation?       performance-metric-normality
+      |     +--rw unidirectional-packet-loss?           performance-metric-normality
+      |     +--rw unidirectional-residual-bandwidth?    performance-metric-normality
+      |     +--rw unidirectional-available-bandwidth?   performance-metric-normality
+      |     +--rw unidirectional-utilized-bandwidth?    performance-metric-normality
+      +--rw link-protection-type?               enumeration
+      +--rw interface-switching-capabilities* [switching-capability]
+      |  +--rw switching-capability               ted:switching-capabilities
+      |  +--rw encoding?                          ted:encoding-type
+      |  +--rw max-lsp-bandwidth* [priority]
+      |  |  +--rw priority     uint8
+      |  |  +--rw bandwidth?   decimal64
+      |  +--rw packet-switch-capable
+      |  |  +--rw minimum-lsp-bandwidth?   decimal64
+      |  |  +--rw interface-mtu?           uint16
+      |  +--rw time-division-multiplex-capable
+      |     +--rw minimum-lsp-bandwidth?   decimal64
+      |     +--rw indication?              enumeration
+      +--rw srlg
+         +--rw srlg-values* [srlg-value]
+            +--rw srlg-value    uint32
