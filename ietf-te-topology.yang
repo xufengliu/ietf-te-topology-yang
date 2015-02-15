@@ -25,9 +25,19 @@ module ietf-te-topology {
   contact "TBD";
   description "TE topology model";
   
-  revision "2015-02-11" {
+  revision "2015-02-12" {
     description "Initial revision";
     reference "TBD";
+  }
+
+  /*
+   * Features
+   */
+
+  feature te-topology-hierarchy {
+    description
+      "This feature indicates that the system allows underlay
+       and/or overlay TE topology hierarchy.";
   }
 
   /*
@@ -118,16 +128,6 @@ module ietf-te-topology {
   }
 
   /*
-   * Features
-   */
-
-  feature te-topology-hierarchy {
-    description
-      "This feature indicates that the system allows underlay
-       and/or overlay TE topology hierarchy.";
-  }
-
-  /*
    * Groupings
    */
 
@@ -146,39 +146,30 @@ module ietf-te-topology {
   grouping link-ref {
     description
       "Grouping for an absolute reference to a link instance.";
-    uses topo-ref;
     leaf source-te-node-id-ref {
       type leafref {
-        path "/tet:te-topologies/tet:topology"
-          +"[tet:te-topology-id = current()/../topo-ref]"
-          +"/tet:link/tet:source-te-node-id";
+        path "/tet:te-topologies/tet:link/tet:source-te-node-id";
       }
       description
         "An absolute reference to a link instance.";
     }
     leaf source-te-link-id-ref {
       type leafref {
-        path "/tet:te-topologies/tet:topology"
-          +"[tet:te-topology-id = current()/../topo-ref]"
-          +"/tet:link/tet:source-te-link-id";
+        path "/tet:te-topologies/tet:link/tet:source-te-link-id";
       }
       description
         "An absolute reference to a link instance.";
     }
     leaf dest-te-node-id-ref {
       type leafref {
-        path "/tet:te-topologies/tet:topology"
-          +"[tet:te-topology-id = current()/../topo-ref]"
-          +"/tet:link/tet:dest-te-node-id";
+        path "/tet:te-topologies/tet:link/tet:dest-te-node-id";
       }
       description
         "An absolute reference to a link instance.";
     }
     leaf dest-te-link-id-ref {
       type leafref {
-        path "/tet:te-topologies/tet:topology"
-          +"[tet:te-topology-id = current()/../topo-ref]"
-          +"/tet:link/tet:dest-te-link-id";
+        path "/tet:te-topologies/tet:link/tet:dest-te-link-id";
       }
       description
         "An absolute reference to a link instance.";
@@ -188,12 +179,9 @@ module ietf-te-topology {
   grouping node-ref {
     description
       "Grouping for an absolute reference to a node instance.";
-    uses topo-ref;
     leaf node-ref {
       type leafref {
-        path "/tet:te-topologies/tet:topology"
-          +"[tet:te-topology-id = current()/../topo-ref]"
-          +"/tet:node/tet:te-node-id";
+        path "/tet:te-topologies/tet:node/tet:te-node-uu-id";
       }
       description
         "An absolute reference to a node instance.";
@@ -207,9 +195,8 @@ module ietf-te-topology {
     uses node-ref;
     leaf link-end-ref {
       type leafref {
-        path "/tet:te-topologies/tet:topology"
-          +"[tet:te-topology-id = current()/../topo-ref]"
-          +"/tet:node[tet:te-node-id = current()/../node-ref]"
+        path "/tet:te-topologies"
+          +"/tet:node[tet:te-node-uu-id = current()/../node-ref]"
           +"/tet:te-node-attributes/tet:te-link/tet:te-link-id";
       }
       description
@@ -631,78 +618,140 @@ module ietf-te-topology {
       }
       list node {
         key "te-node-id";
+        leaf te-node-uu-id {
+          type leafref {
+            path "../../../node/te-node-uu-id";
+          }
+          mandatory true;
+          description
+            "The reference to the te-node.";
+        }
         leaf te-node-id {
-          type te-node-id;
+          type leafref {
+            path "../../../node[te-node-uu-id = "
+              + "current()/../te-node-uu-id]/te-node-id";
+          }
           description
             "The identifier of a node in the topology.
              A node is specific to a topology to which it belongs.";
         }
         description
           "The list of network nodes defined for the topology.";
-        uses te-node-attributes;
       }
       list link {
         key "source-te-node-id source-te-link-id "
           + "dest-te-node-id dest-te-link-id";
         leaf source-te-node-id {
           type leafref {
-            path "../../node/te-node-id";
+            path "../../../link/source-te-node-id";
           }
-          mandatory true;
           description
-            "Source node identifier, must be in same topology.";
+            "Source node identifier.";
         }
         leaf source-te-link-id {
           type leafref {
-            path "../../node[te-node-id = "
-               + "current()/../source-te-node-id]/"
-               + "te-node-attributes/te-link/te-link-id";
+            path "../../../link/source-te-link-id";
           }
-          mandatory true;
           description
-            "Source TE link identifier, must be in same
-            topology.";
+            "Source TE link identifier.";
         }
         leaf dest-te-node-id {
           type leafref {
-            path "../../node/te-node-id";
+            path "../../../link/dest-te-node-id";
           }
-          mandatory true;
           description
-            "Destination node identifier, must be in the same
-              topology.";
+            "Destination node identifier.";
         }
         leaf dest-te-link-id {
           type leafref {
-            path "../../node[te-node-id = "
-               + "current()/../dest-te-node-id]/"
-               + "te-node-attributes/te-link/te-link-id";
+            path "../../../link/dest-te-link-id";
           }
-          mandatory true;
           description
-            "Destination TE link identifier, must be in same
-            topology.";
+            "Destination TE link identifier.";
         }
         description
-          "TE link is a logical construct that represents a way to 
-          group/map information about certain physical resources 
-          (and their properties) that interconnect TE nodes.
-          A Network Link connects a by Local (Source) node and
-          a Remote (Destination) Network Nodes via a set of the
-          nodes' TE links.
-          As it is possible to have several links between the same
-          source and destination nodes, and as a link could
-          potentially be re-homed, to
-          ensure that we would always know to distinguish between
-          links, every link is identified by a dedicated link
-          identifier.
-          Note that a link models a point-to-point link, not a
-          multipoint link.";
-        uses te-link-attributes;
+          "TE links in this topology.";
       }
-    }
-  } // te-topologies
+    } // topology
 
+    list node {
+      key "te-node-uu-id";
+      leaf te-node-uu-id {
+        type yang:uuid;
+        description
+          "The universally unique identifier of a node.";
+      }
+      leaf te-node-id {
+        type te-node-id;
+        description
+          "The identifier of a node in the topology.
+          A node is specific to a topology to which it belongs.";
+      }
+      description
+        "The list of network nodes defined for the topology.";
+      uses te-node-attributes;
+    } // node
+
+    list link {
+      key "source-te-node-id source-te-link-id "
+        + "dest-te-node-id dest-te-link-id";
+      leaf source-te-node-id {
+        type leafref {
+          path "../../node/te-node-uu-id";
+        }
+        mandatory true;
+        description
+          "Source node identifier, must be in same topology.";
+      }
+      leaf source-te-link-id {
+        type leafref {
+          path "../../node[te-node-uu-id = "
+            + "current()/../source-te-node-id]/"
+            + "te-node-attributes/te-link/te-link-id";
+        }
+        mandatory true;
+        description
+          "Source TE link identifier, must be in same
+          topology.";
+      }
+      leaf dest-te-node-id {
+        type leafref {
+          path "../../node/te-node-uu-id";
+        }
+        mandatory true;
+        description
+          "Destination node identifier, must be in the same
+          topology.";
+      }
+      leaf dest-te-link-id {
+        type leafref {
+          path "../../node[te-node-uu-id = "
+            + "current()/../dest-te-node-id]/"
+            + "te-node-attributes/te-link/te-link-id";
+        }
+        mandatory true;
+        description
+          "Destination TE link identifier, must be in same
+          topology.";
+      }
+      description
+        "TE link is a logical construct that represents a way to 
+        group/map information about certain physical resources 
+        (and their properties) that interconnect TE nodes.
+        A Network Link connects a by Local (Source) node and
+        a Remote (Destination) Network Nodes via a set of the
+        nodes' TE links.
+        As it is possible to have several links between the same
+        source and destination nodes, and as a link could
+        potentially be re-homed, to
+        ensure that we would always know to distinguish between
+        links, every link is identified by a dedicated link
+        identifier.
+        Note that a link models a point-to-point link, not a
+        multipoint link.";
+      uses te-link-attributes;
+    } // link
+  } // te-topologies
 
   /*
    * Operational state data nodes
