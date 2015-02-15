@@ -25,7 +25,7 @@ module ietf-te-topology {
   contact "TBD";
   description "TE topology model";
   
-  revision "2015-02-03" {
+  revision "2015-02-11" {
     description "Initial revision";
     reference "TBD";
   }
@@ -303,6 +303,45 @@ module ietf-te-topology {
     }
   }
 
+  grouping information-source-attributes {
+    description
+      "The attributes identifying source that has provided the 
+      related information, and the source credibility.";
+    leaf information-source {
+      type enumeration {
+        enum "unknown" {
+          description "The source is unknown";
+        }
+        enum "locally-configured" {
+          description "Configured TE link";
+        }
+        enum "ospfv2" {
+          description "OSPFv2";
+        }
+        enum "ospfv3" {
+          description "OSPFv3";
+        }
+        enum "isis" {
+          description "ISIS";
+        }
+        enum "other" {
+          description "Other source";
+        }
+      }
+      description 
+        "Indicates the source of the information.";
+    }
+    leaf credibility-preference {
+      type uint16;
+      description
+        "The preference value to calculate the traffic 
+        engineering database credibility value used for 
+        tie-break selection between different 
+        information-source values.
+        Higher value is more preferable.";
+    }
+  }
+
   grouping te-node-attributes {
     description "Node attributes in a TE topology.";
     container te-node-attributes {
@@ -429,40 +468,6 @@ module ietf-te-topology {
             "true  - switching is allowed, 
              false - switching is disallowed.";
         }
-        leaf information-source {
-          type enumeration {
-            enum "unknown" {
-              description "The source is unknown";
-            }
-            enum "locally-configured" {
-              description "Configured TE link";
-            }
-            enum "ospfv2" {
-              description "OSPFv2";
-            }
-            enum "ospfv3" {
-              description "OSPFv3";
-            }
-            enum "isis" {
-              description "ISIS";
-            }
-            enum "other" {
-              description "Other source";
-            }
-          }
-          description 
-            "Indicates the source of the information.";
-        }
-        leaf credibility-preference {
-          type uint16;
-          description
-            "The preference value to calculate the traffic 
-            engineering database credibility value used for 
-            tie-break selection between different 
-            information-source values.
-            Higher value is more preferable.";
-        }
-
       }
       container ted {
         description "Includes TE node attributes.";
@@ -470,6 +475,14 @@ module ietf-te-topology {
       }
     }
   } // te-node-attributes
+    
+  grouping te-node-state-attributes {
+    description "Node state attributes in a TE topology.";
+    container te-node-state-attributes {
+      description "Node state attributes in a TE topology.";
+      uses information-source-attributes;
+    }
+  } // te-node-state-attributes
     
   grouping te-link-attributes {
     description 
@@ -563,6 +576,15 @@ module ietf-te-topology {
       }      
     }
   } // te-link-attributes
+
+  grouping te-link-state-attributes {
+    description 
+      "Link state attributes in a TE topology.";
+    container te-link-state-attributes {
+      description "Link state attributes in a TE topology.";
+      uses information-source-attributes;
+    }
+  } // te-link-state-attributes
 
   /*
    * Configuration data nodes
@@ -748,6 +770,7 @@ module ietf-te-topology {
         description
           "The list of network nodes defined for the topology.";
         uses te-node-attributes;
+        uses te-node-state-attributes;
       }
       list link {
         key "source-te-node-id source-te-link-id "
@@ -807,6 +830,7 @@ module ietf-te-topology {
           Note that a link models a point-to-point link, not a
           multipoint link.";
         uses te-link-attributes;
+        uses te-link-state-attributes;
       }
     }
   } // te-topologies
