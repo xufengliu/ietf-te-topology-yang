@@ -68,47 +68,47 @@ module: ietf-te-topology
    |        |  +--rw start?               yang:date-and-time
    |        |  +--rw schedule-duration?   string
    |        |  +--rw repeat-interval?     string
-   |        +--rw name?                       string
-   |        +--rw flag*                       flag-type
-   |        +--rw is-abstract?                boolean
+   |        +--rw name?          string
+   |        +--rw flag*          flag-type
+   |        +--rw is-abstract?   boolean
    |        +--rw underlay! {te-topology-hierarchy}?
-   |        |  +--rw dynamic?     boolean
-   |        |  +--rw committed?   boolean
-   |        +--rw underlay-path {te-topology-hierarchy}?
-   |        |  +--rw path-element* [path-element-id]
-   |        |     +--rw path-element-id    uint32
-   |        |     +--rw loose?             boolean
-   |        |     +--rw (element-type)?
-   |        |        +--:(numbered-link)
-   |        |        |  +--rw link-ip-address?   inet:ip-address
-   |        |        +--:(unnumbered-link)
-   |        |        |  +--rw link-node-id?      uint32
-   |        |        |  +--rw te-link-id?        uint32
-   |        |        +--:(node)
-   |        |        |  +--rw te-node-id?        uint32
-   |        |        +--:(label)
-   |        |           +--rw label?             uint32
-   |        +--rw underlay-backup-path {te-topology-hierarchy}?
-   |        |  +--rw path-element* [path-element-id]
-   |        |     +--rw path-element-id    uint32
-   |        |     +--rw loose?             boolean
-   |        |     +--rw (element-type)?
-   |        |        +--:(numbered-link)
-   |        |        |  +--rw link-ip-address?   inet:ip-address
-   |        |        +--:(unnumbered-link)
-   |        |        |  +--rw link-node-id?      uint32
-   |        |        |  +--rw te-link-id?        uint32
-   |        |        +--:(node)
-   |        |        |  +--rw te-node-id?        uint32
-   |        |        +--:(label)
-   |        |           +--rw label?             uint32
-   |        +--rw underlay-protection-type?   uint16 {te-topology-hierarchy}?
-   |        +--rw underlay-trail-src {te-topology-hierarchy}?
-   |        |  +--rw node-ref?       leafref
-   |        |  +--rw link-end-ref?   leafref
-   |        +--rw underlay-trail-des {te-topology-hierarchy}?
-   |        |  +--rw node-ref?       leafref
-   |        |  +--rw link-end-ref?   leafref
+   |        |  +--rw underlay-path
+   |        |  |  +--rw path-element* [path-element-id]
+   |        |  |     +--rw path-element-id    uint32
+   |        |  |     +--rw loose?             boolean
+   |        |  |     +--rw topology-id?       leafref
+   |        |  |     +--rw (element-type)?
+   |        |  |        +--:(numbered-link)
+   |        |  |        |  +--rw link-ip-address?   inet:ip-address
+   |        |  |        +--:(unnumbered-link)
+   |        |  |        |  +--rw link-node-id?      uint32
+   |        |  |        |  +--rw te-link-id?        uint32
+   |        |  |        +--:(node)
+   |        |  |        |  +--rw te-node-id?        uint32
+   |        |  |        +--:(label)
+   |        |  |           +--rw label?             uint32
+   |        |  +--rw underlay-backup-path
+   |        |  |  +--rw path-element* [path-element-id]
+   |        |  |     +--rw path-element-id    uint32
+   |        |  |     +--rw loose?             boolean
+   |        |  |     +--rw topology-id?       leafref
+   |        |  |     +--rw (element-type)?
+   |        |  |        +--:(numbered-link)
+   |        |  |        |  +--rw link-ip-address?   inet:ip-address
+   |        |  |        +--:(unnumbered-link)
+   |        |  |        |  +--rw link-node-id?      uint32
+   |        |  |        |  +--rw te-link-id?        uint32
+   |        |  |        +--:(node)
+   |        |  |        |  +--rw te-node-id?        uint32
+   |        |  |        +--:(label)
+   |        |  |           +--rw label?             uint32
+   |        |  +--rw underlay-protection-type?   uint16
+   |        |  +--rw underlay-trail-src
+   |        |  |  +--rw node-ref?       leafref
+   |        |  |  +--rw link-end-ref?   leafref
+   |        |  +--rw underlay-trail-des
+   |        |     +--rw node-ref?       leafref
+   |        |     +--rw link-end-ref?   leafref
    |        +--rw ted
    |           +--rw admin-status?                       enumeration
    |           +--rw oper-status?                        enumeration
@@ -304,47 +304,49 @@ module: ietf-te-topology
             |  |  +--ro start?               yang:date-and-time
             |  |  +--ro schedule-duration?   string
             |  |  +--ro repeat-interval?     string
-            |  +--ro name?                       string
-            |  +--ro flag*                       flag-type
-            |  +--ro is-abstract?                boolean
+            |  +--ro name?          string
+            |  +--ro flag*          flag-type
+            |  +--ro is-abstract?   boolean
             |  +--ro underlay! {te-topology-hierarchy}?
-            |  |  +--ro dynamic?     boolean
-            |  |  +--ro committed?   boolean
-            |  +--ro underlay-path {te-topology-hierarchy}?
-            |  |  +--ro path-element* [path-element-id]
-            |  |     +--ro path-element-id    uint32
-            |  |     +--ro loose?             boolean
-            |  |     +--ro (element-type)?
-            |  |        +--:(numbered-link)
-            |  |        |  +--ro link-ip-address?   inet:ip-address
-            |  |        +--:(unnumbered-link)
-            |  |        |  +--ro link-node-id?      uint32
-            |  |        |  +--ro te-link-id?        uint32
-            |  |        +--:(node)
-            |  |        |  +--ro te-node-id?        uint32
-            |  |        +--:(label)
-            |  |           +--ro label?             uint32
-            |  +--ro underlay-backup-path {te-topology-hierarchy}?
-            |  |  +--ro path-element* [path-element-id]
-            |  |     +--ro path-element-id    uint32
-            |  |     +--ro loose?             boolean
-            |  |     +--ro (element-type)?
-            |  |        +--:(numbered-link)
-            |  |        |  +--ro link-ip-address?   inet:ip-address
-            |  |        +--:(unnumbered-link)
-            |  |        |  +--ro link-node-id?      uint32
-            |  |        |  +--ro te-link-id?        uint32
-            |  |        +--:(node)
-            |  |        |  +--ro te-node-id?        uint32
-            |  |        +--:(label)
-            |  |           +--ro label?             uint32
-            |  +--ro underlay-protection-type?   uint16 {te-topology-hierarchy}?
-            |  +--ro underlay-trail-src {te-topology-hierarchy}?
-            |  |  +--ro node-ref?       leafref
-            |  |  +--ro link-end-ref?   leafref
-            |  +--ro underlay-trail-des {te-topology-hierarchy}?
-            |  |  +--ro node-ref?       leafref
-            |  |  +--ro link-end-ref?   leafref
+            |  |  +--ro underlay-path
+            |  |  |  +--ro path-element* [path-element-id]
+            |  |  |     +--ro path-element-id    uint32
+            |  |  |     +--ro loose?             boolean
+            |  |  |     +--ro topology-id?       leafref
+            |  |  |     +--ro (element-type)?
+            |  |  |        +--:(numbered-link)
+            |  |  |        |  +--ro link-ip-address?   inet:ip-address
+            |  |  |        +--:(unnumbered-link)
+            |  |  |        |  +--ro link-node-id?      uint32
+            |  |  |        |  +--ro te-link-id?        uint32
+            |  |  |        +--:(node)
+            |  |  |        |  +--ro te-node-id?        uint32
+            |  |  |        +--:(label)
+            |  |  |           +--ro label?             uint32
+            |  |  +--ro underlay-backup-path
+            |  |  |  +--ro path-element* [path-element-id]
+            |  |  |     +--ro path-element-id    uint32
+            |  |  |     +--ro loose?             boolean
+            |  |  |     +--ro topology-id?       leafref
+            |  |  |     +--ro (element-type)?
+            |  |  |        +--:(numbered-link)
+            |  |  |        |  +--ro link-ip-address?   inet:ip-address
+            |  |  |        +--:(unnumbered-link)
+            |  |  |        |  +--ro link-node-id?      uint32
+            |  |  |        |  +--ro te-link-id?        uint32
+            |  |  |        +--:(node)
+            |  |  |        |  +--ro te-node-id?        uint32
+            |  |  |        +--:(label)
+            |  |  |           +--ro label?             uint32
+            |  |  +--ro underlay-protection-type?   uint16
+            |  |  +--ro underlay-trail-src
+            |  |  |  +--ro node-ref?       leafref
+            |  |  |  +--ro link-end-ref?   leafref
+            |  |  +--ro underlay-trail-des
+            |  |  |  +--ro node-ref?       leafref
+            |  |  |  +--ro link-end-ref?   leafref
+            |  |  +--ro dynamic?                    boolean
+            |  |  +--ro committed?                  boolean
             |  +--ro ted
             |     +--ro admin-status?                       enumeration
             |     +--ro oper-status?                        enumeration
@@ -539,47 +541,49 @@ notifications:
          |  +--ro start?               yang:date-and-time
          |  +--ro schedule-duration?   string
          |  +--ro repeat-interval?     string
-         +--ro name?                       string
-         +--ro flag*                       flag-type
-         +--ro is-abstract?                boolean
+         +--ro name?          string
+         +--ro flag*          flag-type
+         +--ro is-abstract?   boolean
          +--ro underlay! {te-topology-hierarchy}?
-         |  +--ro dynamic?     boolean
-         |  +--ro committed?   boolean
-         +--ro underlay-path {te-topology-hierarchy}?
-         |  +--ro path-element* [path-element-id]
-         |     +--ro path-element-id    uint32
-         |     +--ro loose?             boolean
-         |     +--ro (element-type)?
-         |        +--:(numbered-link)
-         |        |  +--ro link-ip-address?   inet:ip-address
-         |        +--:(unnumbered-link)
-         |        |  +--ro link-node-id?      uint32
-         |        |  +--ro te-link-id?        uint32
-         |        +--:(node)
-         |        |  +--ro te-node-id?        uint32
-         |        +--:(label)
-         |           +--ro label?             uint32
-         +--ro underlay-backup-path {te-topology-hierarchy}?
-         |  +--ro path-element* [path-element-id]
-         |     +--ro path-element-id    uint32
-         |     +--ro loose?             boolean
-         |     +--ro (element-type)?
-         |        +--:(numbered-link)
-         |        |  +--ro link-ip-address?   inet:ip-address
-         |        +--:(unnumbered-link)
-         |        |  +--ro link-node-id?      uint32
-         |        |  +--ro te-link-id?        uint32
-         |        +--:(node)
-         |        |  +--ro te-node-id?        uint32
-         |        +--:(label)
-         |           +--ro label?             uint32
-         +--ro underlay-protection-type?   uint16 {te-topology-hierarchy}?
-         +--ro underlay-trail-src {te-topology-hierarchy}?
-         |  +--ro node-ref?       leafref
-         |  +--ro link-end-ref?   leafref
-         +--ro underlay-trail-des {te-topology-hierarchy}?
-         |  +--ro node-ref?       leafref
-         |  +--ro link-end-ref?   leafref
+         |  +--ro underlay-path
+         |  |  +--ro path-element* [path-element-id]
+         |  |     +--ro path-element-id    uint32
+         |  |     +--ro loose?             boolean
+         |  |     +--ro topology-id?       leafref
+         |  |     +--ro (element-type)?
+         |  |        +--:(numbered-link)
+         |  |        |  +--ro link-ip-address?   inet:ip-address
+         |  |        +--:(unnumbered-link)
+         |  |        |  +--ro link-node-id?      uint32
+         |  |        |  +--ro te-link-id?        uint32
+         |  |        +--:(node)
+         |  |        |  +--ro te-node-id?        uint32
+         |  |        +--:(label)
+         |  |           +--ro label?             uint32
+         |  +--ro underlay-backup-path
+         |  |  +--ro path-element* [path-element-id]
+         |  |     +--ro path-element-id    uint32
+         |  |     +--ro loose?             boolean
+         |  |     +--ro topology-id?       leafref
+         |  |     +--ro (element-type)?
+         |  |        +--:(numbered-link)
+         |  |        |  +--ro link-ip-address?   inet:ip-address
+         |  |        +--:(unnumbered-link)
+         |  |        |  +--ro link-node-id?      uint32
+         |  |        |  +--ro te-link-id?        uint32
+         |  |        +--:(node)
+         |  |        |  +--ro te-node-id?        uint32
+         |  |        +--:(label)
+         |  |           +--ro label?             uint32
+         |  +--ro underlay-protection-type?   uint16
+         |  +--ro underlay-trail-src
+         |  |  +--ro node-ref?       leafref
+         |  |  +--ro link-end-ref?   leafref
+         |  +--ro underlay-trail-des
+         |  |  +--ro node-ref?       leafref
+         |  |  +--ro link-end-ref?   leafref
+         |  +--ro dynamic?                    boolean
+         |  +--ro committed?                  boolean
          +--ro ted
             +--ro admin-status?                       enumeration
             +--ro oper-status?                        enumeration

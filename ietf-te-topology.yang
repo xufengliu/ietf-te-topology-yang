@@ -25,7 +25,7 @@ module ietf-te-topology {
   contact "TBD";
   description "TE topology model";
   
-  revision "2015-02-12" {
+  revision "2015-02-20" {
     description "Initial revision";
     reference "TBD";
   }
@@ -221,6 +221,14 @@ module ietf-te-topology {
     leaf loose {
       type boolean;
       description "true if the element is loose.";
+    }
+    leaf topology-id {
+      type leafref {
+        path "/tet:te-topologies/tet:topology/tet:te-topology-id";
+        require-instance false;
+      }
+      description 
+        "Identifies the topology where the element belongs.";
     }
     choice element-type {
       description "Attributes for various element types.";
@@ -470,6 +478,70 @@ module ietf-te-topology {
       uses information-source-attributes;
     }
   } // te-node-state-attributes
+
+  grouping te-link-underlay-attributes {
+    description "Attributes for  te-link underlay.";
+    container underlay-path {
+      description 
+        "The service path on the underlay topology that
+         supports this link.";
+      list path-element {
+        key "path-element-id";
+        description 
+          "A list of path elements describing the service path";
+        leaf path-element-id {
+          type uint32;
+          description "To identify the element in a path.";
+        }
+        uses te-path-element;
+      }
+    } // underlay-path
+    container underlay-backup-path {
+      description 
+        "The backup service path on the underlay topology that
+         supports this link.";
+      list path-element {
+        key "path-element-id";
+        description 
+          "A list of path elements describing the backup service 
+           path";
+        leaf path-element-id {
+          type uint32;
+          description "To identify the element in a path.";
+        }
+        uses te-path-element;
+      }
+    } // underlay-backup-path
+    leaf underlay-protection-type {
+      type uint16;
+      description
+        "Underlay protection type desired for this link";
+    }
+    container underlay-trail-src {
+      uses tet:link-end-ref;
+      description
+        "Source TE link of the underlay trail.";
+    }
+    container underlay-trail-des {
+      uses tet:link-end-ref;
+      description
+        "Destination TE link of the underlay trail.";
+    }
+  } // te-link-underlay-attributes
+
+  grouping te-link-state-underlay-attributes {
+    description "State attributes for te-link underlay.";
+    leaf dynamic {
+      type boolean;
+      description 
+        "true if the underlay is dynamically created.";
+    }
+    leaf committed {
+      type boolean;
+      description 
+        "true if the underlay is committed.";
+    }
+  } // te-link-state-underlay-attributes
     
   grouping te-link-attributes {
     description 
@@ -495,68 +567,8 @@ module ietf-te-topology {
           "Indicates the underlay exists for this link.";
         description "State of the underlay of this link.";
 
-        leaf dynamic {
-          type boolean;
-          description 
-            "true if the underlay is dynamically created.";
-        }
-        leaf committed {
-          type boolean;
-          description 
-            "true if the underlay is committed.";
-        }
-      }
-      container underlay-path {
-        if-feature te-topology-hierarchy;
-        description 
-          "The service path on the underlay topology that
-           supports this link.";
-        list path-element {
-          key "path-element-id";
-          description 
-            "A list of path elements describing the service path";
-          leaf path-element-id {
-            type uint32;
-            description "To identify the element in a path.";
-          }
-          uses te-path-element;
-        }
-      } // underlay-path
-      container underlay-backup-path {
-        if-feature te-topology-hierarchy;
-        description 
-          "The backup service path on the underlay topology that
-           supports this link.";
-        list path-element {
-          key "path-element-id";
-          description 
-            "A list of path elements describing the backup service 
-             path";
-          leaf path-element-id {
-            type uint32;
-            description "To identify the element in a path.";
-          }
-          uses te-path-element;
-        }
-      } // underlay-backup-path
-      leaf underlay-protection-type {
-        if-feature te-topology-hierarchy;
-        type uint16;
-        description
-          "Underlay protection type desired for this link";
-      }
-      container underlay-trail-src {
-        if-feature te-topology-hierarchy;
-        uses tet:link-end-ref;
-        description
-          "Source TE link of the underlay trail.";
-      }
-      container underlay-trail-des {
-        if-feature te-topology-hierarchy;
-        uses tet:link-end-ref;
-        description
-          "Destination TE link of the underlay trail.";
-      }
+        uses te-link-underlay-attributes;
+      } // underlay
       container ted {
         description "Includes TE link attributes.";
         uses ted:ted-link-attributes;
@@ -884,6 +896,12 @@ module ietf-te-topology {
     }
   } // te-topologies
 
+  augment "/te-topologies-state/topology/link/te-link-attributes/"
+    + "underlay" {
+    description "Add state attributes to te-link underlay.";
+    uses te-link-state-underlay-attributes;
+  }
+
   /*
    * Notifications
    */
@@ -908,5 +926,10 @@ module ietf-te-topology {
     uses link-ref;
     uses te-topology-type;
     uses tet:te-link-attributes;
+  }
+
+  augment "/te-link-event/te-link-attributes/underlay" {
+    description "Add state attributes to te-link underlay.";
+    uses te-link-state-underlay-attributes;
   }
 }
