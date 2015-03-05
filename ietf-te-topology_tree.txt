@@ -15,8 +15,8 @@ module: ietf-te-topology
    |  |     |        +--rw source-te-link-id    leafref
    |  |     |        +--rw dest-te-node-id      leafref
    |  |     |        +--rw dest-te-link-id      leafref
-   |  |     +--:(actual)
-   |  |        +--rw actual
+   |  |     +--:(provider)
+   |  |        +--rw provider
    |  |           +--rw node* [te-node-id]
    |  |           |  +--rw te-node-id            te-node-id
    |  |           |  +--rw te-node-attributes
@@ -489,8 +489,8 @@ module: ietf-te-topology
       |     |        +--ro source-te-link-id    leafref
       |     |        +--ro dest-te-node-id      leafref
       |     |        +--ro dest-te-link-id      leafref
-      |     +--:(actual)
-      |        +--ro actual
+      |     +--:(provider)
+      |        +--ro provider
       |           +--ro node* [te-node-id]
       |           |  +--ro te-node-id                  te-node-id
       |           |  +--ro te-node-attributes

@@ -25,7 +25,7 @@ module ietf-te-topology {
   contact "TBD";
   description "TE topology model";
   
-  revision "2015-02-26" {
+  revision "2015-03-02" {
     description "Initial revision";
     reference "TBD";
   }
@@ -638,7 +638,8 @@ module ietf-te-topology {
       }
       choice abstract-type {
         description
-          "Different structures for abstract or actual topologies.";
+          "Different structures for abstract or provider
+          topologies.";
         case abstract {
           container abstract {
             description
@@ -703,10 +704,10 @@ module ietf-te-topology {
             } // link
           } // abstract
         }
-        case actual {
-          container actual {
+        case provider {
+          container provider {
             description
-              "The structure for an actual topology.";
+              "The structure for a provider topology.";
             list node {
               key "te-node-id";
               leaf te-node-id {
@@ -923,7 +924,8 @@ module ietf-te-topology {
       }
       choice abstract-type {
         description
-          "Different structures for abstract or actual topologies.";
+          "Different structures for abstract or provider
+          topologies.";
         case abstract {
           container abstract {
             description
@@ -988,10 +990,10 @@ module ietf-te-topology {
             } // link
           } // abstract
         }
-        case actual {
-          container actual {
+        case provider {
+          container provider {
             description
-              "The structure for an actual topology.";
+              "The structure for a provider topology.";
             list node {
               key "te-node-id";
               leaf te-node-id {
@@ -1155,8 +1157,8 @@ module ietf-te-topology {
     } // link
   } // te-topologies
 
-  augment "/te-topologies-state/topology/abstract-type/actual/"
-    + "actual/link/te-link-attributes/underlay" {
+  augment "/te-topologies-state/topology/abstract-type/provider/"
+    + "provider/link/te-link-attributes/underlay" {
     description "Add state attributes to te-link underlay.";
     uses te-link-state-underlay-attributes;
   }
